@@ -1,12 +1,12 @@
 public class Dessert {
     int flavor;
     int price;
+    int numDesserts;
     Dessert(int flavor, int price) {
         this.flavor = flavor;
         this.price = price;
         numDesserts++;
     }
-    static int numDesserts = 0;
     public void printDessert() {
         System.out.println(flavor + " " + price + " " + numDesserts);
     }
