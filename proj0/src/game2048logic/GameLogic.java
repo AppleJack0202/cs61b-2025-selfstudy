@@ -1,5 +1,6 @@
 package game2048logic;
 
+import Jama.Matrix;
 import game2048rendering.Side;
 import static game2048logic.MatrixUtils.rotateLeft;
 import static game2048logic.MatrixUtils.rotateRight;
@@ -20,6 +21,16 @@ public class GameLogic {
      */
     public static int moveTileUpAsFarAsPossible(int[][] board, int r, int c, int minR) {
         // TODO: Fill this in in tasks 2, 3, 4
+        while(r > minR && board[r-1][c] == 0){
+            board[r-1][c] = board[r][c];
+            board[r][c] = 0;
+            r--;
+        }
+        if (r > minR && board[r][c] == board[r-1][c]) {
+            board[r-1][c] = 2 * board[r][c];
+            board[r][c] = 0;
+            return r;
+        }
         return 0;
     }
 
@@ -32,7 +43,13 @@ public class GameLogic {
      */
     public static void tiltColumn(int[][] board, int c) {
         // TODO: fill this in in task 5
-        return;
+        int minR = 0;
+        for(int i = 1; i < board.length; i++) {
+            int mergerow = moveTileUpAsFarAsPossible(board, i, c, minR);
+            if (mergerow > 0) {
+                minR = mergerow;
+            }
+        }
     }
 
     /**
@@ -42,7 +59,9 @@ public class GameLogic {
      */
     public static void tiltUp(int[][] board) {
         // TODO: fill this in in task 6
-        return;
+        for(int c = 0; c < board.length; c++) {
+            tiltColumn(board, c);
+        }
     }
 
     /**
@@ -55,13 +74,21 @@ public class GameLogic {
     public static void tilt(int[][] board, Side side) {
         // TODO: fill this in in task 7
         if (side == Side.EAST) {
-            return;
+            MatrixUtils.rotateLeft(board);
+            tiltUp(board);
+            MatrixUtils.rotateRight(board);
         } else if (side == Side.WEST) {
-            return;
+            MatrixUtils.rotateRight(board);
+            tiltUp(board);
+            MatrixUtils.rotateLeft(board);
         } else if (side == Side.SOUTH) {
-            return;
+            MatrixUtils.rotateLeft(board);
+            MatrixUtils.rotateLeft(board);
+            tiltUp(board);
+            MatrixUtils.rotateRight(board);
+            MatrixUtils.rotateRight(board);
         } else {
-            return;
+            tiltUp(board);
         }
     }
 }
